@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Staff Panel</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/staff-panel.css">
+</head>
+<body>
+
+<div id="staffLoader" style="display:none;">
+    <div class="spinner-border" role="status"><span class="visually-hidden">Loading...</span></div>
+</div>
+
+<!-- Login Area -->
+<div id="auth-container">
+    <div class="container login-container">
+        <div class="card shadow">
+            <div class="card-body p-4">
+                <div class="text-center mb-4">
+                    <img src="https://via.placeholder.com/50/FACC15/111827?text=S" alt="Logo" id="loginLogo" style="width:50px;height:50px;border-radius:50%;object-fit:cover;">
+                    <h2 class="card-title mt-3 mb-1">Staff Login</h2>
+                    <p class="text-muted small mb-0">Use credentials provided by your admin</p>
+                </div>
+                <form id="staffLoginForm">
+                    <div class="mb-3">
+                        <label for="staffEmail" class="form-label">Email</label>
+                        <input type="email" class="form-control" id="staffEmail" required autocomplete="username">
+                    </div>
+                    <div class="mb-3">
+                        <label for="staffPassword" class="form-label">Password</label>
+                        <input type="password" class="form-control" id="staffPassword" required autocomplete="current-password">
+                    </div>
+                    <div id="loginStatus" class="mb-3"></div>
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-warning fw-bold" id="loginBtn">
+                            <i class="bi bi-box-arrow-in-right"></i> Login
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Main Staff Panel -->
+<div id="main-area" style="display:none;">
+    <header class="app-header">
+        <div class="header-left">
+            <button class="menu-toggle-btn" type="button" data-bs-toggle="offcanvas" data-bs-target="#staffSidebar">
+                <i class="bi bi-list"></i>
+            </button>
+            <img src="https://via.placeholder.com/35/1E293B/94A3B8?text=S" alt="Logo" class="header-logo" id="headerLogo" style="display:none;">
+            <h1 class="header-title ms-1" id="pageTitle">Dashboard <span class="staff-badge">STAFF</span></h1>
+        </div>
+        <div class="header-right">
+            <span class="staff-email-header" id="staffEmailDisplay"></span>
+            <button class="btn btn-sm btn-outline-danger" id="logoutBtn"><i class="bi bi-box-arrow-right"></i> Logout</button>
+        </div>
+    </header>
+
+    <div class="offcanvas offcanvas-start" tabindex="-1" id="staffSidebar">
+        <div class="offcanvas-header">
+            <div class="offcanvas-title">
+                <h5>Staff Menu <span class="staff-badge">STAFF</span></h5>
+            </div>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas"></button>
+        </div>
+        <div class="offcanvas-body">
+            <ul class="nav flex-column">
+                <li class="nav-item"><a class="nav-link active" href="#" data-section="dashboard-section"><i class="bi bi-speedometer2"></i> Dashboard</a></li>
+                <li class="nav-item"><a class="nav-link" href="#" data-section="games-section"><i class="bi bi-controller"></i> Games</a></li>
+                <li class="nav-item"><a class="nav-link" href="#" data-section="promotions-section"><i class="bi bi-images"></i> Promotions</a></li>
+                <li class="nav-item"><a class="nav-link" href="#" data-section="tournaments-section"><i class="bi bi-trophy"></i> Tournaments</a></li>
+                <li class="nav-item"><a class="nav-link" href="#" data-section="tournament-mgt-section"><i class="bi bi-award-fill"></i> Tournament Mgt</a></li>
+                <li class="nav-item"><a class="nav-link" href="#" data-section="leaderboard-section"><i class="bi bi-bar-chart-line-fill"></i> Leaderboard Mgt</a></li>
+                <li class="nav-item"><a class="nav-link" href="#" data-section="notifications-section"><i class="bi bi-bell"></i> Notifications</a></li>
+                <li class="nav-item"><a class="nav-link" href="#" data-section="theme-section"><i class="bi bi-palette-fill"></i> Theme Customization</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <main class="main-content" id="mainContent">
+
+        <!-- ===== DASHBOARD ===== -->
+        <section id="dashboard-section" class="section active">
+            <h2>Dashboard <span class="staff-badge">STAFF VIEW</span></h2>
+            <div class="row">
+                <div class="col-lg-3 col-md-6 mb-4">
+                    <div class="card text-bg-info shadow-sm h-100">
+                        <div class="card-body">
+                            <h5 class="card-title">Total Tournaments</h5>
+                            <p class="card-text fs-3 fw-bold mb-0" id="statTotalTournaments">--</p>
+                            <i class="bi bi-trophy-fill dash-card-icon"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6 mb-4">
+                    <div class="card text-bg-success shadow-sm h-100">
+                        <div class="card-body">
+                            <h5 class="card-title">Active Tournaments</h5>
+                            <p class="card-text fs-3 fw-bold mb-0" id="statActiveTournaments">--</p>
+                            <i class="bi bi-play-circle-fill dash-card-icon"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6 mb-4">
+                    <div class="card text-bg-secondary shadow-sm h-100">
+                        <div class="card-body">
+                            <h5 class="card-title">Total Games</h5>
+                            <p class="card-text fs-3 fw-bold mb-0" id="statTotalGames">--</p>
+                            <i class="bi bi-controller dash-card-icon"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6 mb-4">
+                    <div class="card text-bg-primary shadow-sm h-100">
+                        <div class="card-body">
+                            <h5 class="card-title">Finished Tournaments</h5>
+                            <p class="card-text fs-3 fw-bold mb-0" id="statFinishedTournaments">--</p>
+                            <i class="bi bi-flag-fill dash-card-icon"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="dashboardStatus"></div>
+        </section>
+
+        <!-- ===== GAMES ===== -->
+        <section id="games-section" class="section">
+            <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
+                <h2>Manage Games</h2>
+                <button class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#gameModal" id="addNewGameBtn"><i class="bi bi-plus-circle"></i> Add Game</button>
+            </div>
+            <div id="gamesStatus" class="mb-3"></div>
+            <div class="table-responsive card">
+                <table class="table table-dark table-hover mb-0">
+                    <thead><tr><th>Image</th><th>Name</th><th>Game ID</th><th>Actions</th></tr></thead>
+                    <tbody id="gamesTableBody">
+                        <tr class="loading-placeholder"><td colspan="4"><div class="placeholder w-100 py-3"></div></td></tr>
+                        <tr class="loading-placeholder"><td colspan="4"><div class="placeholder w-100 py-3"></div></td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- ===== PROMOTIONS ===== -->
+        <section id="promotions-section" class="section">
+            <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
+                <h2>Manage Promotions</h2>
+                <button class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#promotionModal" id="addNewPromotionBtn"><i class="bi bi-plus-circle"></i> Add Promotion</button>
+            </div>
+            <div id="promotionsStatus" class="mb-3"></div>
+            <div class="table-responsive card">
+                <table class="table table-dark table-hover mb-0">
+                    <thead><tr><th>Image</th><th>Link</th><th>Actions</th></tr></thead>
+                    <tbody id="promotionsTableBody">
+                        <tr class="loading-placeholder"><td colspan="3"><div class="placeholder w-100 py-3"></div></td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- ===== TOURNAMENTS ===== -->
+        <section id="tournaments-section" class="section">
+            <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
+                <h2>Manage Tournaments</h2>
+                <button class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#addTournamentModal" id="addNewTournamentBtn"><i class="bi bi-plus-circle"></i> Add Tournament</button>
+            </div>
+            <div id="tournamentsStatus" class="mb-3"></div>
+            <div class="table-responsive card">
+                <table class="table table-dark table-hover mb-0">
+                    <thead><tr><th>Name</th><th>Game</th><th>Fee</th><th>Prize</th><th>Start Time</th><th>Status</th><th>Players</th><th>Actions</th></tr></thead>
+                    <tbody id="tournamentsTableBody">
+                        <tr class="loading-placeholder"><td colspan="8"><div class="placeholder w-100 py-3"></div></td></tr>
+                        <tr class="loading-placeholder"><td colspan="8"><div class="placeholder w-100 py-3"></div></td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- ===== TOURNAMENT MANAGEMENT ===== -->
+        <section id="tournament-mgt-section" class="section">
+            <h2>Tournament Prize Management</h2>
+            <div class="card">
+                <div class="card-body">
+                    <div class="row align-items-end mb-3">
+                        <div class="col-md-6">
+                            <label for="tmsTournamentSelect" class="form-label">Select Tournament</label>
+                            <select class="form-select" id="tmsTournamentSelect">
+                                <option value="">-- Loading Tournaments --</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div id="tmsStatus" class="mb-3"></div>
+                    <div id="tmsPlayerListContainer" style="display:none;">
+                        <div class="table-responsive">
+                            <table class="table table-dark table-hover mb-0">
+                                <thead>
+                                    <tr>
+                                        <th>Player</th><th>Game UID</th><th>Per Kill Prize</th>
+                                        <th>Kills</th><th>Extra Amount</th><th>Rank</th><th>Calculated Prize</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tmsPlayerListTableBody"></tbody>
+                            </table>
+                        </div>
+                        <div class="mt-4 text-end">
+                            <button class="btn btn-success btn-lg" id="creditWinningsBtn">
+                                <i class="bi bi-check-circle-fill"></i> Credit All Winnings
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===== LEADERBOARD MGT ===== -->
+        <section id="leaderboard-section" class="section">
+            <h2>Leaderboard Management</h2>
+            <div class="card">
+                <div class="card-body">
+                    <p class="text-secondary">Set rank and display earnings for users. Users with a rank appear on the leaderboard sorted by rank number (1 is highest). Leave blank to remove from leaderboard.</p>
+                    <div id="leaderboardMgtStatus" class="mb-3"></div>
+                    <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
+                        <input type="search" class="form-control form-control-sm" style="max-width:300px;" id="leaderboardUserSearchInput" placeholder="Search for user...">
+                        <button class="btn btn-primary" id="saveLeaderboardBtn"><i class="bi bi-save"></i> Save Leaderboard Changes</button>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-dark table-hover">
+                            <thead><tr><th>User</th><th>Rank</th><th>Display Earnings (रु)</th></tr></thead>
+                            <tbody id="leaderboardMgtTableBody"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===== NOTIFICATIONS ===== -->
+        <section id="notifications-section" class="section">
+            <h2>Send Notifications</h2>
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h5 class="card-title">Send Global Notification (to all users)</h5>
+                    <form id="globalNotificationForm">
+                        <div class="mb-3"><label for="globalNotifTitle" class="form-label">Title</label><input type="text" class="form-control" id="globalNotifTitle" required></div>
+                        <div class="mb-3"><label for="globalNotifMessage" class="form-label">Message</label><textarea class="form-control" id="globalNotifMessage" rows="3" required></textarea></div>
+                        <div class="mb-3"><label for="globalNotifImageUrl" class="form-label">Image URL (Optional)</label><input type="url" class="form-control" id="globalNotifImageUrl" placeholder="https://example.com/image.png"></div>
+                        <button type="submit" class="btn btn-primary">Send to All Users</button>
+                        <div id="globalNotificationStatus" class="mt-3"></div>
+                    </form>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Global Notification History</h5>
+                    <div id="globalNotificationsHistory"><p class="text-muted">Loading history...</p></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===== THEME ===== -->
+        <section id="theme-section" class="section">
+            <h2>Theme Customization</h2>
+            <div class="card">
+                <div class="card-body">
+                    <form id="themeSettingsForm">
+                        <div id="themeStatus" class="mb-3"></div>
+                        <h5 class="card-title">Preset Themes</h5>
+                        <div class="mb-4 d-flex flex-wrap gap-2">
+                            <button type="button" class="btn btn-secondary" id="presetBtnDefault">Default Dark</button>
+                            <button type="button" class="btn btn-light" id="presetBtnLight">Professional Light</button>
+                            <button type="button" class="btn btn-danger" id="presetBtnGamingRed">Gaming Red</button>
+                        </div>
+                        <h5 class="card-title">Custom Theme Colors</h5>
+                        <p class="text-secondary small">Changes reflect live on this panel. Click "Save Theme" to apply for all users.</p>
+                        <div class="theme-grid">
+                            <div>
+                                <h6>Backgrounds & Cards</h6>
+                                <div class="color-input-group"><label for="themePrimaryBg">Primary Background</label><input type="color" id="themePrimaryBg" data-theme-var="primary-bg"></div>
+                                <div class="color-input-group"><label for="themeSecondaryBg">Secondary Background</label><input type="color" id="themeSecondaryBg" data-theme-var="secondary-bg"></div>
+                                <div class="color-input-group"><label for="themeCardBg">Card Background</label><input type="color" id="themeCardBg" data-theme-var="card-bg"></div>
+                                <div class="color-input-group"><label for="themeBorderColor">Border Color</label><input type="color" id="themeBorderColor" data-theme-var="border-color"></div>
+                            </div>
+                            <div>
+                                <h6>Text</h6>
+                                <div class="color-input-group"><label for="themeTextPrimary">Primary Text</label><input type="color" id="themeTextPrimary" data-theme-var="text-primary"></div>
+                                <div class="color-input-group"><label for="themeTextSecondary">Secondary Text</label><input type="color" id="themeTextSecondary" data-theme-var="text-secondary"></div>
+                            </div>
+                            <div>
+                                <h6>Accent & Buttons</h6>
+                                <div class="color-input-group"><label for="themeAccentColor">Accent Color</label><input type="color" id="themeAccentColor" data-theme-var="accent-color"></div>
+                                <div class="color-input-group"><label for="themePrimaryButtonBg">Button Color</label><input type="color" id="themePrimaryButtonBg" data-theme-var="primary-button-bg"></div>
+                            </div>
+                            <div>
+                                <h6>Status Colors</h6>
+                                <div class="color-input-group"><label for="themeSuccessColor">Success</label><input type="color" id="themeSuccessColor" data-theme-var="success-color"></div>
+                                <div class="color-input-group"><label for="themeDangerColor">Danger</label><input type="color" id="themeDangerColor" data-theme-var="danger-color"></div>
+                                <div class="color-input-group"><label for="themeWarningColor">Warning</label><input type="color" id="themeWarningColor" data-theme-var="warning-color"></div>
+                                <div class="color-input-group"><label for="themeInfoColor">Info</label><input type="color" id="themeInfoColor" data-theme-var="info-color"></div>
+                            </div>
+                        </div>
+                        <div class="theme-actions">
+                            <button type="button" class="btn btn-primary" id="saveThemeBtn"><i class="bi bi-save"></i> Save Theme</button>
+                            <button type="button" class="btn btn-outline-secondary" id="resetThemeBtn"><i class="bi bi-arrow-counterclockwise"></i> Reset to Default</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </section>
+
+    </main>
+</div>
+
+<!-- ===== MODALS ===== -->
+
+<!-- Game Modal -->
+<div class="modal fade" id="gameModal" tabindex="-1">
+    <div class="modal-dialog"><div class="modal-content">
+        <div class="modal-header"><h5 class="modal-title" id="gameModalTitle">Add New Game</h5><button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button></div>
+        <div class="modal-body">
+            <form id="gameForm">
+                <input type="hidden" id="gameEditId">
+                <div class="mb-3"><label class="form-label">Game Name</label><input type="text" class="form-control" id="gameName" required></div>
+                <div class="mb-3"><label class="form-label">Image URL</label><input type="url" class="form-control" id="gameImageUrl"><small class="text-muted">Direct image URL for an image you are authorized to use.</small></div>
+                <div class="mb-3"><label class="form-label">Upload Image (Optional)</label><input class="form-control" type="file" id="gameImageFile" accept="image/jpeg,image/png,image/webp,image/gif"><div class="image-upload-status mt-2"></div></div>
+                <div id="gameStatus" class="mt-2"></div>
+            </form>
+        </div>
+        <div class="modal-footer"><button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button><button type="button" class="btn btn-primary" id="saveGameBtn">Save Game</button></div>
+    </div></div>
+</div>
+
+<!-- Promotion Modal -->
+<div class="modal fade" id="promotionModal" tabindex="-1">
+    <div class="modal-dialog"><div class="modal-content">
+        <div class="modal-header"><h5 class="modal-title" id="promotionModalTitle">Add New Promotion</h5><button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button></div>
+        <div class="modal-body">
+            <form id="promotionForm">
+                <input type="hidden" id="promotionEditId">
+                <div class="mb-3"><label class="form-label">Image URL</label><input type="url" class="form-control" id="promoImageUrl"><small class="text-muted">Direct image URL.</small></div>
+                <div class="mb-3"><label class="form-label">Upload Image (Optional)</label><input class="form-control" type="file" id="promoImageFile" accept="image/jpeg,image/png,image/webp,image/gif"><div class="image-upload-status mt-2"></div></div>
+                <div class="mb-3"><label class="form-label">Link (Optional)</label><input type="url" class="form-control" id="promoLink"></div>
+                <div id="promotionStatus" class="mt-2"></div>
+            </form>
+        </div>
+        <div class="modal-footer"><button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button><button type="button" class="btn btn-primary" id="savePromotionBtn">Save Promotion</button></div>
+    </div></div>
+</div>
+
+<!-- Tournament Modal -->
+<div class="modal fade" id="addTournamentModal" tabindex="-1">
+    <div class="modal-dialog modal-lg"><div class="modal-content">
+        <div class="modal-header"><h5 class="modal-title" id="tournamentModalTitle">Add New Tournament</h5><button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button></div>
+        <div class="modal-body">
+            <form id="tournamentForm">
+                <input type="hidden" id="tournamentEditId">
+                <div class="row">
+                    <div class="col-md-6 mb-3"><label class="form-label">Game</label><select class="form-select" id="tournamentGame" required></select></div>
+                    <div class="col-md-6 mb-3"><label class="form-label">Tournament Name</label><input type="text" class="form-control" id="tournamentName" required></div>
+                    <div class="col-md-6 mb-3"><label class="form-label">Start Date & Time</label><input type="datetime-local" class="form-control" id="tournamentStartTime" required></div>
+                    <div class="col-md-6 mb-3"><label class="form-label">Status</label><select class="form-select" id="tournamentStatus" required><option value="upcoming">Upcoming</option><option value="ongoing">Ongoing</option><option value="completed">Completed</option><option value="result">Result</option><option value="cancelled">Cancelled</option></select></div>
+                    <div class="col-md-4 mb-3"><label class="form-label">Entry Fee (रु)</label><input type="number" class="form-control" id="tournamentEntryFee" min="0" value="0" step="any"></div>
+                    <div class="col-md-4 mb-3"><label class="form-label">Total Prize Pool (रु)</label><input type="number" class="form-control" id="tournamentPrizePool" min="0" value="0" step="any"></div>
+                    <div class="col-md-4 mb-3"><label class="form-label">Per Kill Prize (रु)</label><input type="number" class="form-control" id="tournamentPerKill" min="0" value="0" step="any"></div>
+                    <div class="col-md-4 mb-3"><label class="form-label">Max Players (0=Unlimited)</label><input type="number" class="form-control" id="tournamentMaxPlayers" min="0" value="0"></div>
+                    <div class="col-md-4 mb-3"><label class="form-label">Mode</label><select class="form-select" id="tournamentMode"><option value="Solo">Solo</option><option value="Duo">Duo</option><option value="Squad">Squad</option></select></div>
+                    <div class="col-md-4 mb-3"><label class="form-label">Tags (comma-separated)</label><input type="text" class="form-control" id="tournamentTags" placeholder="e.g., Erangel, TPP"></div>
+                    <div class="col-12 mb-3"><label class="form-label">Banner URL (16:9)</label><input type="url" class="form-control" id="tournamentBannerUrl"></div>
+                    <div class="col-12 mb-3"><label class="form-label">Description / Rules</label><textarea class="form-control" id="tournamentDescription" rows="4"></textarea></div>
+                    <div class="col-md-6 mb-3"><label class="form-label">Room ID</label><input type="text" class="form-control" id="tournamentRoomId"></div>
+                    <div class="col-md-6 mb-3"><label class="form-label">Room Password</label><input type="text" class="form-control" id="tournamentRoomPassword"></div>
+                    <div class="form-check mb-3 ms-2"><input class="form-check-input" type="checkbox" id="tournamentShowIdPass"><label class="form-check-label" for="tournamentShowIdPass">Show ID/Pass?</label></div>
+                </div>
+                <div id="addTournamentStatus" class="mt-2"></div>
+            </form>
+        </div>
+        <div class="modal-footer"><button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button><button type="button" class="btn btn-primary" id="saveTournamentBtn">Save Tournament</button></div>
+    </div></div>
+</div>
+
+<!-- Registered Players Modal -->
+<div class="modal fade" id="registeredPlayersModal" tabindex="-1">
+    <div class="modal-dialog modal-xl modal-dialog-scrollable"><div class="modal-content">
+        <div class="modal-header"><h5 class="modal-title" id="registeredPlayersModalTitle">Registered Players</h5><button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button></div>
+        <div class="modal-body">
+            <p>Tournament: <strong id="registeredPlayersTournamentName"></strong></p>
+            <div id="registeredPlayersStatus" class="mb-2"></div>
+            <div class="table-responsive">
+                <table class="table table-dark table-sm table-hover">
+                    <thead><tr><th>Registered By</th><th>Player 1 Details</th><th>Player 2 Details</th><th>Joined At</th></tr></thead>
+                    <tbody id="registeredPlayersTableBody"></tbody>
+                </table>
+            </div>
+        </div>
+        <div class="modal-footer"><button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button></div>
+    </div></div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script type="module" src="assets/js/staff-panel.js"></script>
+</body>
+</html>

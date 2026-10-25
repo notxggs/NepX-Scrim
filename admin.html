@@ -1,0 +1,914 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel - Gaming Tournament</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="assets/css/admin.css">
+</head>
+<body>
+
+    <div id="adminLoader">
+        <div class="spinner-border" role="status"><span class="visually-hidden">Loading...</span></div>
+    </div>
+
+    <!-- Login / Setup Area -->
+    <div id="auth-container">
+        <div id="admin-setup-section" style="display: none;">
+            <div class="container login-container"> <div class="card shadow"> <div class="card-body p-4"> <h2 class="card-title text-center mb-4">Admin Account Setup</h2> <p class="text-muted text-center small mb-3">Create the primary admin account.</p> <form id="adminSetupForm"> <div class="mb-3"> <label for="setupEmail" class="form-label">Admin Email</label> <input type="email" class="form-control" id="setupEmail" required> </div> <div class="mb-3"> <label for="setupPassword" class="form-label">Admin Password (min 6 chars)</label> <input type="password" class="form-control" id="setupPassword" required minlength="6"> </div> <div id="adminSetupStatus" class="mt-3"></div> <div class="d-grid"> <button type="submit" class="btn btn-success">Create Admin Account</button> </div> </form> </div> </div> </div>
+        </div>
+        <div id="admin-login-section" style="display: none;">
+            <div class="container login-container"> <div class="card shadow"> <div class="card-body p-4"> <h2 class="card-title text-center mb-4">Admin Login</h2> <form id="adminLoginForm"> <div class="mb-3"> <label for="adminEmail" class="form-label">Email</label> <input type="email" class="form-control" id="adminEmail" required> </div> <div class="mb-3"> <label for="adminPassword" class="form-label">Password</label> <input type="password" class="form-control" id="adminPassword" required> </div> <div id="adminLoginStatus" class="mt-3"></div> <div class="d-grid"> <button type="submit" class="btn btn-primary">Login</button> </div> </form> </div> </div> </div>
+        </div>
+    </div>
+
+    <!-- Main Admin Panel Area -->
+    <div id="admin-main-area" style="display: none;">
+        <header class="app-header">
+            <div class="header-left">
+                <button class="menu-toggle-btn" type="button" data-bs-toggle="offcanvas" data-bs-target="#adminSidebar" aria-controls="adminSidebar">
+                    <i class="bi bi-list"></i>
+                </button>
+                <img src="https://via.placeholder.com/35/1E293B/94A3B8?text=L" alt="Logo" class="header-logo" id="adminHeaderLogo" style="display:none;">
+                <h1 class="header-title ms-1" id="adminPageTitle">Dashboard</h1>
+            </div>
+            <div class="header-right">
+                <span class="admin-email-header" id="adminUserEmailShort"></span>
+                <button class="btn btn-sm btn-outline-danger" id="adminLogoutBtnHeader"><i class="bi bi-box-arrow-right"></i> Logout</button>
+            </div>
+        </header>
+
+        <div class="offcanvas offcanvas-start" tabindex="-1" id="adminSidebar" aria-labelledby="adminSidebarLabel">
+            <div class="offcanvas-header">
+                <h5 class="offcanvas-title" id="adminSidebarLabel">Admin Menu</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+            </div>
+            <div class="offcanvas-body">
+                <ul class="nav flex-column">
+                     <li class="nav-item"> <a class="nav-link active" href="#" data-section="dashboard-section"><i class="bi bi-speedometer2"></i> Dashboard</a> </li>
+                    <li class="nav-item"> <a class="nav-link" href="#" data-section="games-section"><i class="bi bi-controller"></i> Games</a> </li>
+                    <li class="nav-item"> <a class="nav-link" href="#" data-section="promotions-section"><i class="bi bi-images"></i> Promotions</a> </li>
+                    <li class="nav-item"> <a class="nav-link" href="#" data-section="tournaments-section"><i class="bi bi-trophy"></i> Tournaments</a> </li>
+                    <li class="nav-item"> <a class="nav-link" href="#" data-section="tournament-management-section"><i class="bi bi-award-fill"></i> Tournament Mgt</a> </li>
+                    <li class="nav-item"> <a class="nav-link" href="#" data-section="leaderboard-mgt-section"><i class="bi bi-bar-chart-line-fill"></i> Leaderboard Mgt</a> </li>
+                    <li class="nav-item"> <a class="nav-link" href="#" data-section="users-section"><i class="bi bi-people"></i> Users</a> </li>
+                    <li class="nav-item"> <a class="nav-link" href="#" data-section="staff-section"><i class="bi bi-person-badge-fill"></i> Staff</a> </li>
+                    <li class="nav-item"> <a class="nav-link" href="#" data-section="user-analytics-section"><i class="bi bi-pie-chart-fill"></i> User Analytics</a> </li>
+                    <li class="nav-item"> <a class="nav-link" href="#" data-section="notifications-section"><i class="bi bi-bell"></i> Notifications</a> </li>
+                    <li class="nav-item"> <a class="nav-link" href="#" data-section="transactions-section"><i class="bi bi-receipt"></i> Transactions</a> </li>
+                    <li class="nav-item"> <a class="nav-link" href="#" data-section="support-reports-section"><i class="bi bi-life-preserver"></i> Support Reports</a> </li>
+                    <li class="nav-item"> <a class="nav-link" href="#" data-section="game-topups-section"><i class="bi bi-gem"></i> Game Top-ups</a> </li>
+                    <li class="nav-item"> <a class="nav-link" href="#" data-section="withdrawals-section"><i class="bi bi-cash-coin"></i> Withdrawals <span class="badge bg-danger ms-1" id="pendingWithdrawalCountBadge" style="display: none;">0</span></a> </li>
+                    <li class="nav-item"> <a class="nav-link" href="#" data-section="deposit-section">
+                            <img src="https://i.ibb.co/cWcfwt2/20250626-183518.png" alt="Deposit Icon" class="sidebar-icon" style="height: 20px; width: 20px; object-fit: contain;"> Deposit <span class="badge bg-warning ms-1" id="pendingDepositCountBadge" style="display: none;">0</span>
+                        </a> 
+                    </li>
+                    <li class="nav-item"> <a class="nav-link" href="#" data-section="referrals-section"><i class="bi bi-person-plus"></i> Referrals <span class="badge bg-info ms-1" id="pendingReferralCountBadge" style="display: none;">0</span></a> </li>
+                    <li class="nav-item"> <a class="nav-link" href="#" data-section="theme-section"><i class="bi bi-palette-fill"></i> Theme Customization</a> </li>
+                    <li class="nav-item"> <a class="nav-link" href="#" data-section="settings-section"><i class="bi bi-gear"></i> Settings</a> </li>
+                </ul>
+                <div class="mt-auto p-3 border-top border-secondary">
+                     <button class="btn btn-warning btn-sm w-100 mb-2" id="addDemoDataBtn"><i class="bi bi-database-add"></i> Add Demo Data</button>
+                     <small class="text-muted d-block text-center">Adds sample data if DB is empty.</small>
+                </div>
+            </div>
+        </div>
+
+        <main class="main-content" id="adminMainContent">
+            <!-- Dashboard Section -->
+            <section id="dashboard-section" class="section active">
+                <h2>Dashboard Overview</h2>
+                <div class="row">
+                    <!-- Row 1 -->
+                    <div class="col-lg-3 col-md-6 mb-4">
+                        <div class="card text-bg-primary shadow-sm h-100">
+                            <div class="card-body">
+                                <h5 class="card-title">Total Users</h5>
+                                <p class="card-text fs-3 fw-bold mb-0" id="statTotalUsers">--</p>
+                                <i class="bi bi-people-fill dash-card-icon"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-6 mb-4">
+                        <div class="card text-bg-info shadow-sm h-100">
+                            <div class="card-body">
+                                <h5 class="card-title">Active/Upcoming Tournaments</h5>
+                                <p class="card-text fs-3 fw-bold mb-0" id="statActiveTournaments">--</p>
+                                <i class="bi bi-trophy-fill dash-card-icon"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-6 mb-4">
+                        <div class="card text-bg-warning shadow-sm h-100">
+                            <div class="card-body">
+                                <h5 class="card-title">Pending Withdrawals</h5>
+                                <p class="card-text fs-3 fw-bold mb-0" id="statPendingWithdrawals">--</p>
+                                <i class="bi bi-hourglass-split dash-card-icon"></i>
+                            </div>
+                        </div>
+                    </div>
+                     <div class="col-lg-3 col-md-6 mb-4">
+                        <div class="card text-bg-success shadow-sm h-100">
+                            <div class="card-body">
+                                <h5 class="card-title">Completed Withdrawals</h5>
+                                <p class="card-text fs-3 fw-bold mb-0" id="statCompletedWithdrawals">--</p>
+                                <i class="bi bi-check-circle-fill dash-card-icon"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Row 2 -->
+                    <div class="col-lg-3 col-md-6 mb-4">
+                        <div class="card text-bg-dark shadow-sm h-100"> <!-- Changed color -->
+                            <div class="card-body">
+                                <h5 class="card-title">Rejected Withdrawals</h5>
+                                <p class="card-text fs-3 fw-bold mb-0" id="statRejectedWithdrawals">--</p>
+                                <i class="bi bi-x-octagon-fill dash-card-icon"></i>
+                            </div>
+                        </div>
+                    </div>
+                     <div class="col-lg-3 col-md-6 mb-4">
+                        <div class="card text-bg-secondary shadow-sm h-100">
+                            <div class="card-body">
+                                <h5 class="card-title">Total Games</h5>
+                                <p class="card-text fs-3 fw-bold mb-0" id="statTotalGames">--</p>
+                                <i class="bi bi-controller dash-card-icon"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-6 mb-4">
+                        <div class="card text-bg-secondary shadow-sm h-100">
+                            <div class="card-body">
+                                <h5 class="card-title">Total Promotions</h5>
+                                <p class="card-text fs-3 fw-bold mb-0" id="statTotalPromotions">--</p>
+                                <i class="bi bi-images dash-card-icon"></i>
+                            </div>
+                        </div>
+                    </div>
+                     <div class="col-lg-3 col-md-6 mb-4">
+                        <div class="card text-bg-secondary shadow-sm h-100">
+                            <div class="card-body">
+                                <h5 class="card-title">Finished Tournaments</h5>
+                                <p class="card-text fs-3 fw-bold mb-0" id="statFinishedTournaments">--</p>
+                                <i class="bi bi-flag-fill dash-card-icon"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-6 mb-4">
+                        <div class="card text-bg-secondary shadow-sm h-100">
+                            <div class="card-body">
+                                <h5 class="card-title">Total Staff</h5>
+                                <p class="card-text fs-3 fw-bold mb-0" id="statTotalStaff">--</p>
+                                <i class="bi bi-person-badge-fill dash-card-icon"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="dashboardStatus"></div> <!-- For general dashboard status messages -->
+                <div class="row">
+                    <div class="col-12">
+                         <div class="card">
+                             <div class="card-body">
+                                 <h5 class="card-title">New User Signups (Last 7 Days)</h5>
+                                 <canvas id="newUserChart"></canvas>
+                             </div>
+                         </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Games Section -->
+            <section id="games-section" class="section">
+                <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
+                    <h2>Manage Games</h2>
+                    <button class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#gameModal" id="addNewGameBtn"><i class="bi bi-plus-circle"></i> Add Game</button>
+                </div>
+                 <div id="gamesStatus" class="mb-3"></div> <!-- Status for actions etc. -->
+                <div class="table-responsive card">
+                    <table class="table table-dark table-hover mb-0">
+                        <thead> <tr><th>Image</th><th>Name</th><th>Game ID</th><th>Actions</th></tr> </thead>
+                        <tbody id="gamesTableBody"> <!-- Placeholder Rows -->
+                            <tr class="loading-placeholder"><td colspan="4"><div class="placeholder w-100 py-3"></div></td></tr>
+                            <tr class="loading-placeholder"><td colspan="4"><div class="placeholder w-100 py-3"></div></td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Promotions Section -->
+            <section id="promotions-section" class="section">
+                <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
+                     <h2>Manage Promotions</h2>
+                     <button class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#promotionModal" id="addNewPromotionBtn"><i class="bi bi-plus-circle"></i> Add Promotion</button>
+                </div>
+                <div id="promotionsStatus" class="mb-3"></div> <!-- Status for actions etc. -->
+                <div class="table-responsive card">
+                    <table class="table table-dark table-hover mb-0">
+                         <thead> <tr><th>Image</th><th>Link</th><th>Actions</th></tr> </thead>
+                         <tbody id="promotionsTableBody"> <!-- Placeholder Rows -->
+                            <tr class="loading-placeholder"><td colspan="3"><div class="placeholder w-100 py-3"></div></td></tr>
+                         </tbody>
+                    </table>
+                </div>
+             </section>
+
+            <!-- Tournaments Section -->
+            <section id="tournaments-section" class="section">
+                 <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
+                     <h2>Manage Tournaments</h2>
+                     <button class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#addTournamentModal" id="addNewTournamentBtn"><i class="bi bi-plus-circle"></i> Add Tournament</button>
+                 </div>
+                 <div id="tournamentsStatus" class="mb-3"></div> <!-- Status for actions etc. -->
+                 <div class="table-responsive card">
+                     <table class="table table-dark table-hover mb-0">
+                         <thead> <tr><th>Name</th><th>Game</th><th>Fee</th><th>Prize</th><th>Start Time</th><th>Status</th><th>Players</th><th>Actions</th></tr> </thead>
+                         <tbody id="tournamentsTableBody"> <!-- Placeholder Rows -->
+                            <tr class="loading-placeholder"><td colspan="8"><div class="placeholder w-100 py-3"></div></td></tr>
+                            <tr class="loading-placeholder"><td colspan="8"><div class="placeholder w-100 py-3"></div></td></tr>
+                         </tbody>
+                    </table>
+                 </div>
+            </section>
+            
+            <!-- Tournament Management Section -->
+            <section id="tournament-management-section" class="section">
+                <h2>Tournament Prize Management</h2>
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row align-items-end mb-3">
+                            <div class="col-md-6">
+                                <label for="tmsTournamentSelect" class="form-label">Select Tournament</label>
+                                <select class="form-select" id="tmsTournamentSelect">
+                                    <option value="">-- Loading Tournaments --</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div id="tmsStatus" class="mb-3"></div>
+
+                        <div id="tmsPlayerListContainer" style="display: none;">
+                            <div class="table-responsive">
+                                <table class="table table-dark table-hover mb-0">
+                                    <thead>
+                                        <tr>
+                                            <th>Player</th>
+                                            <th>Game UID</th>
+                                            <th>Per Kill Prize</th>
+                                            <th>Kills</th>
+                                            <th>Extra Amount</th>
+                                            <th>Rank</th>
+                                            <th>Calculated Prize</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="tmsPlayerListTableBody">
+                                        <!-- Player rows will be dynamically inserted here -->
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="mt-4 text-end">
+                                <button class="btn btn-success btn-lg" id="creditWinningsBtn">
+                                    <i class="bi bi-check-circle-fill"></i> Credit All Winnings
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Leaderboard Management Section (NEW) -->
+            <section id="leaderboard-mgt-section" class="section">
+                <h2>Leaderboard Management</h2>
+                <div class="card">
+                    <div class="card-body">
+                        <p class="text-secondary">
+                            Set the rank and display earnings for users. Users with a rank will appear on the leaderboard, sorted by their rank number (1 is highest). Leave rank blank to remove a user from the leaderboard.
+                        </p>
+                        <div id="leaderboardMgtStatus" class="mb-3"></div>
+                        <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
+                             <input type="search" class="form-control form-control-sm" style="max-width: 300px;" id="leaderboardUserSearchInput" placeholder="Search for user...">
+                            <button class="btn btn-primary" id="saveLeaderboardBtn">
+                                <i class="bi bi-save"></i> Save Leaderboard Changes
+                            </button>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table table-dark table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>User</th>
+                                        <th>Rank</th>
+                                        <th>Display Earnings (रु)</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="leaderboardMgtTableBody">
+                                    <!-- Populated by JS -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Users Section -->
+            <section id="users-section" class="section">
+                <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
+                    <h2>Manage Users</h2>
+                    <div class="d-flex gap-2">
+                        <input type="search" class="form-control form-control-sm" id="userSearchInput" placeholder="Search by name or email...">
+                        <button class="btn btn-primary btn-sm flex-shrink-0" id="downloadUsersPdfBtn">
+                             <i class="bi bi-file-earmark-pdf-fill"></i> Download PDF
+                        </button>
+                        <button class="btn btn-success btn-sm flex-shrink-0" data-bs-toggle="modal" data-bs-target="#addUserModal">
+                            <i class="bi bi-person-plus-fill"></i> Add User
+                        </button>
+                    </div>
+                </div>
+                 <div id="usersStatus" class="mb-3"></div> <!-- Status area -->
+                <div class="table-responsive card">
+                    <table class="table table-dark table-hover mb-0">
+                        <thead>
+                            <tr><th>UID</th><th>Display Name</th><th>Email</th><th>Balance</th><th>Status</th><th>Actions</th></tr>
+                        </thead>
+                        <tbody id="usersTableBody"> <!-- Placeholder Rows -->
+                            <tr class="loading-placeholder"><td colspan="6"><div class="placeholder w-100 py-3"></div></td></tr>
+                            <tr class="loading-placeholder"><td colspan="6"><div class="placeholder w-100 py-3"></div></td></tr>
+                            <tr class="loading-placeholder"><td colspan="6"><div class="placeholder w-100 py-3"></div></td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+            
+            <!-- Staff Section -->
+            <section id="staff-section" class="section">
+                <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
+                    <h2>Manage Staff</h2>
+                    <div class="d-flex gap-2">
+                        <input type="search" class="form-control form-control-sm" id="staffSearchInput" placeholder="Search by name or email...">
+                        <button class="btn btn-success btn-sm flex-shrink-0" id="addNewStaffBtn" data-bs-toggle="modal" data-bs-target="#addStaffModal">
+                            <i class="bi bi-person-plus-fill"></i> Add Staff
+                        </button>
+                    </div>
+                </div>
+                <div id="staffStatus" class="mb-3"></div>
+                <div class="table-responsive card">
+                    <table class="table table-dark table-hover mb-0">
+                        <thead>
+                            <tr><th>Name</th><th>Email</th><th>Status</th><th>Added On</th><th>Actions</th></tr>
+                        </thead>
+                        <tbody id="staffTableBody">
+                            <tr class="loading-placeholder"><td colspan="5"><div class="placeholder w-100 py-3"></div></td></tr>
+                            <tr class="loading-placeholder"><td colspan="5"><div class="placeholder w-100 py-3"></div></td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+             <!-- User Analytics Section -->
+            <section id="user-analytics-section" class="section">
+                 <h2>User Analytics</h2>
+                 <div class="row">
+                     <!-- Top Spenders Card -->
+                     <div class="col-lg-4 mb-4">
+                         <div class="card h-100">
+                             <div class="card-body">
+                                 <h5 class="card-title">Top 10 Spenders</h5>
+                                 <div class="table-responsive" id="topSpendersContainer">
+                                      <p class="text-secondary">Loading data...</p>
+                                 </div>
+                             </div>
+                         </div>
+                     </div>
+                     <!-- Most Active Players Card -->
+                     <div class="col-lg-4 mb-4">
+                          <div class="card h-100">
+                             <div class="card-body">
+                                 <h5 class="card-title">Top 10 Active Players</h5>
+                                 <div class="table-responsive" id="mostActiveContainer">
+                                      <p class="text-secondary">Loading data...</p>
+                                 </div>
+                             </div>
+                         </div>
+                     </div>
+                     <!-- Inactive Users Card -->
+                     <div class="col-lg-4 mb-4">
+                         <div class="card h-100">
+                             <div class="card-body">
+                                 <h5 class="card-title">Inactive Users (> 15 days)</h5>
+                                 <div class="table-responsive" id="inactiveUsersContainer">
+                                      <p class="text-secondary">Loading data...</p>
+                                 </div>
+                             </div>
+                         </div>
+                     </div>
+                 </div>
+            </section>
+
+            <!-- Notifications Section -->
+            <section id="notifications-section" class="section">
+                <h2>Send Notifications</h2>
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <h5 class="card-title">Send Global Notification (to all users)</h5>
+                        <form id="globalNotificationForm">
+                            <div class="mb-3">
+                                <label for="globalNotifTitle" class="form-label">Title</label>
+                                <input type="text" class="form-control" id="globalNotifTitle" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="globalNotifMessage" class="form-label">Message</label>
+                                <textarea class="form-control" id="globalNotifMessage" rows="3" required></textarea>
+                            </div>
+                            <div class="mb-3">
+                                <label for="globalNotifImageUrl" class="form-label">Image URL (Optional)</label>
+                                <input type="url" class="form-control" id="globalNotifImageUrl" placeholder="https://example.com/image.png">
+                            </div>
+                            <button type="submit" class="btn btn-primary">Send to All Users</button>
+                            <div id="globalNotificationStatus" class="mt-3"></div>
+                        </form>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Global Notification History</h5>
+                        <div id="globalNotificationsHistory" class="table-responsive">
+                            <p class="text-muted">Loading history...</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Transactions Section -->
+            <section id="transactions-section" class="section card"> <div class="card-body"> <h2 class="card-title">User Transactions</h2> <p class="text-muted">Section under development.</p></div> </section>
+
+            <section id="support-reports-section" class="section">
+                <h2>Support Reports / Tickets</h2>
+                <p class="text-muted">Review user reports, update ticket status, and securely download attachments.</p>
+                <div id="supportReportsStatus" class="mb-3"></div>
+                <div class="card">
+                    <div class="table-responsive">
+                        <table class="table table-dark table-hover mb-0">
+                            <thead><tr><th>Submitted</th><th>User</th><th>Issue</th><th>Description</th><th>Files</th><th>Status</th></tr></thead>
+                            <tbody id="supportReportsTableBody"><tr><td colspan="6" class="text-muted">Open this section to load reports.</td></tr></tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <section id="game-topups-section" class="section">
+                <h2>Game Currency Top-ups</h2>
+                <p class="text-muted">Add Free Fire diamond packages using games already listed in the app. Paid orders appear here after server verification.</p>
+                <div id="gameTopupsAdminStatus" class="mb-3"></div>
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Add package</h5>
+                        <form id="gameTopupPackageForm" class="row g-3">
+                            <div class="col-md-3">
+                                <label for="gameTopupAdminGame" class="form-label">Listed game</label>
+                                <select id="gameTopupAdminGame" class="form-select" required></select>
+                            </div>
+                            <div class="col-md-3">
+                                <label for="gameTopupAdminPackageName" class="form-label">Package name</label>
+                                <input id="gameTopupAdminPackageName" class="form-control" type="text" maxlength="100" placeholder="e.g. Free Fire Diamonds" required>
+                            </div>
+                            <div class="col-md-2">
+                                <label for="gameTopupAdminUnits" class="form-label">Currency units</label>
+                                <input id="gameTopupAdminUnits" class="form-control" type="number" min="1" step="1" required>
+                            </div>
+                            <div class="col-md-2">
+                                <label for="gameTopupAdminPrice" class="form-label">Price (NPR)</label>
+                                <input id="gameTopupAdminPrice" class="form-control" type="number" min="50" max="100000" step="1" required>
+                            </div>
+                            <div class="col-md-2 d-flex align-items-end">
+                                <button id="saveGameTopupPackageBtn" class="btn btn-primary w-100" type="submit">Add package</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Available packages</h5>
+                        <div class="table-responsive">
+                            <table class="table table-dark table-hover">
+                                <thead><tr><th>Game</th><th>Package</th><th>Units</th><th>Price</th><th>Action</th></tr></thead>
+                                <tbody id="gameTopupPackagesTableBody"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Verified orders</h5>
+                        <div class="table-responsive">
+                            <table class="table table-dark table-hover">
+                                <thead><tr><th>Paid</th><th>User</th><th>Game / Package</th><th>Player ID</th><th>Amount</th><th>Fulfillment</th></tr></thead>
+                                <tbody id="gameTopupOrdersTableBody"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Withdrawals Section -->
+            <section id="withdrawals-section" class="section">
+                <h2>Manage Withdrawals</h2>
+                 <div id="withdrawalsStatus" class="mb-3"></div> <!-- Status area -->
+                <div class="card">
+                    <div class="card-header bg-secondary border-bottom border-dark"> <ul class="nav nav-tabs card-header-tabs" id="withdrawalTabs" role="tablist"> <li class="nav-item" role="presentation"><button class="nav-link active" id="pending-tab" data-bs-toggle="tab" data-bs-target="#pendingWithdrawalsTab" type="button" role="tab">Pending</button></li> <li class="nav-item" role="presentation"><button class="nav-link" id="completed-tab" data-bs-toggle="tab" data-bs-target="#completedWithdrawalsTab" type="button" role="tab">Completed</button></li> <li class="nav-item" role="presentation"><button class="nav-link" id="rejected-tab" data-bs-toggle="tab" data-bs-target="#rejectedWithdrawalsTab" type="button" role="tab">Rejected</button></li> </ul> </div>
+                    <div class="card-body tab-content p-0">
+                        <div class="tab-pane fade show active" id="pendingWithdrawalsTab" role="tabpanel">
+                            <div class="table-responsive">
+                                <table class="table table-dark table-hover mb-0">
+                                    <thead><tr><th>Requested At</th><th>User</th><th>Amount</th><th>Method</th><th>Actions</th></tr></thead>
+                                    <tbody id="pendingWithdrawalsTableBody"></tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="tab-pane fade" id="completedWithdrawalsTab" role="tabpanel">
+                            <div class="table-responsive">
+                                <table class="table table-dark table-hover mb-0">
+                                    <thead><tr><th>Requested At</th><th>Processed At</th><th>User</th><th>Amount</th><th>Method</th><th>Admin Note</th></tr></thead>
+                                    <tbody id="completedWithdrawalsTableBody"></tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="tab-pane fade" id="rejectedWithdrawalsTab" role="tabpanel">
+                            <div class="table-responsive">
+                                <table class="table table-dark table-hover mb-0">
+                                    <thead><tr><th>Requested At</th><th>Processed At</th><th>User</th><th>Amount</th><th>Method</th><th>Reason</th></tr></thead>
+                                    <tbody id="rejectedWithdrawalsTableBody"></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                 </div>
+            </section>
+            
+            <!-- Deposit Section -->
+            <section id="deposit-section" class="section">
+                <h2>Manage Deposits</h2>
+                <div id="depositsStatus" class="mb-3"></div>
+                <div class="card">
+                    <div class="card-header bg-secondary border-bottom border-dark">
+                        <ul class="nav nav-tabs card-header-tabs" id="depositTabs" role="tablist">
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link active" id="pending-deposits-tab" data-bs-toggle="tab" data-bs-target="#pendingDepositsTab" type="button" role="tab">Pending</button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="completed-deposits-tab" data-bs-toggle="tab" data-bs-target="#completedDepositsTab" type="button" role="tab">Completed</button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="rejected-deposits-tab" data-bs-toggle="tab" data-bs-target="#rejectedDepositsTab" type="button" role="tab">Rejected</button>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="card-body tab-content p-0">
+                        <div class="tab-pane fade show active" id="pendingDepositsTab" role="tabpanel">
+                            <div class="table-responsive">
+                                <table class="table table-dark table-hover mb-0">
+                                    <thead><tr><th>Requested At</th><th>User</th><th>Amount</th><th>UTR</th><th>Method</th><th>Action</th></tr></thead>
+                                    <tbody id="pendingDepositsTableBody"></tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="tab-pane fade" id="completedDepositsTab" role="tabpanel">
+                            <div class="table-responsive">
+                                <table class="table table-dark table-hover mb-0">
+                                    <thead><tr><th>Requested At</th><th>Processed At</th><th>User</th><th>Amount</th><th>UTR</th><th>Method</th></tr></thead>
+                                    <tbody id="completedDepositsTableBody"></tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="tab-pane fade" id="rejectedDepositsTab" role="tabpanel">
+                             <div class="table-responsive">
+                                <table class="table table-dark table-hover mb-0">
+                                    <thead><tr><th>Requested At</th><th>Processed At</th><th>User</th><th>Amount</th><th>UTR</th><th>Method</th></tr></thead>
+                                    <tbody id="rejectedDepositsTableBody"></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Referrals Section -->
+            <section id="referrals-section" class="section">
+                <h2>Manage Referrals</h2>
+                <div id="referralsStatus" class="mb-3"></div>
+                <div class="card">
+                    <div class="card-header bg-secondary border-bottom border-dark">
+                        <ul class="nav nav-tabs card-header-tabs" id="referralTabs" role="tablist">
+                            <li class="nav-item" role="presentation"><button class="nav-link active" id="pending-referrals-tab" data-bs-toggle="tab" data-bs-target="#pendingReferralsTab" type="button" role="tab">Pending</button></li>
+                            <li class="nav-item" role="presentation"><button class="nav-link" id="completed-referrals-tab" data-bs-toggle="tab" data-bs-target="#completedReferralsTab" type="button" role="tab">Completed</button></li>
+                        </ul>
+                    </div>
+                    <div class="card-body tab-content p-0">
+                        <!-- Pending Referrals Tab -->
+                        <div class="tab-pane fade show active" id="pendingReferralsTab" role="tabpanel">
+                            <div class="table-responsive">
+                                <table class="table table-dark table-hover mb-0">
+                                    <thead><tr><th>Date</th><th>Referrer</th><th>Referred User</th><th>Action</th></tr></thead>
+                                    <tbody id="pendingReferralsTableBody"></tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <!-- Completed Referrals Tab -->
+                        <div class="tab-pane fade" id="completedReferralsTab" role="tabpanel">
+                             <div class="table-responsive">
+                                <table class="table table-dark table-hover mb-0">
+                                    <thead><tr><th>Credited At</th><th>Referrer</th><th>Referred User</th><th>Bonus</th></tr></thead>
+                                    <tbody id="completedReferralsTableBody"></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- =========== NEW THEME SECTION =========== -->
+            <section id="theme-section" class="section">
+                <h2>Theme Customization</h2>
+                <div class="card">
+                    <div class="card-body">
+                        <form id="themeSettingsForm">
+                            <div id="themeStatus" class="mb-3"></div>
+                            
+                            <h5 class="card-title">Preset Themes</h5>
+                            <div class="mb-4 d-flex flex-wrap gap-2">
+                                <button type="button" class="btn btn-secondary" id="presetBtnDefault">Default Dark</button>
+                                <button type="button" class="btn btn-light" id="presetBtnLight">Professional Light</button>
+                                <button type="button" class="btn btn-danger" id="presetBtnGamingRed">Gaming Red</button>
+                            </div>
+
+                            <h5 class="card-title">Custom Theme Colors</h5>
+                            <p class="text-secondary small">Changes here will be reflected live on this admin panel. Click "Save Theme" to apply them for all users.</p>
+
+                            <div class="theme-grid">
+                                <div>
+                                    <h6>Backgrounds & Cards</h6>
+                                    <div class="color-input-group">
+                                        <label for="themePrimaryBg">Primary Background</label>
+                                        <input type="color" id="themePrimaryBg" data-theme-var="primary-bg">
+                                    </div>
+                                    <div class="color-input-group">
+                                        <label for="themeSecondaryBg">Secondary Background</label>
+                                        <input type="color" id="themeSecondaryBg" data-theme-var="secondary-bg">
+                                    </div>
+                                     <div class="color-input-group">
+                                        <label for="themeCardBg">Card Background</label>
+                                        <input type="color" id="themeCardBg" data-theme-var="card-bg">
+                                    </div>
+                                    <div class="color-input-group">
+                                        <label for="themeBorderColor">Border Color</label>
+                                        <input type="color" id="themeBorderColor" data-theme-var="border-color">
+                                    </div>
+                                </div>
+                                <div>
+                                    <h6>Text</h6>
+                                    <div class="color-input-group">
+                                        <label for="themeTextPrimary">Primary Text</label>
+                                        <input type="color" id="themeTextPrimary" data-theme-var="text-primary">
+                                    </div>
+                                    <div class="color-input-group">
+                                        <label for="themeTextSecondary">Secondary Text</label>
+                                        <input type="color" id="themeTextSecondary" data-theme-var="text-secondary">
+                                    </div>
+                                </div>
+                                <div>
+                                     <h6>Accents & Buttons</h6>
+                                     <div class="color-input-group">
+                                        <label for="themeAccentColor">Accent Color</label>
+                                        <input type="color" id="themeAccentColor" data-theme-var="accent-color">
+                                    </div>
+                                    <div class="color-input-group">
+                                        <label for="themePrimaryButtonBg">Primary Button BG</label>
+                                        <input type="color" id="themePrimaryButtonBg" data-theme-var="primary-button-bg">
+                                    </div>
+                                </div>
+                                <div>
+                                     <h6>Status Colors</h6>
+                                     <div class="color-input-group">
+                                        <label for="themeSuccessColor">Success</label>
+                                        <input type="color" id="themeSuccessColor" data-theme-var="success-color">
+                                    </div>
+                                    <div class="color-input-group">
+                                        <label for="themeDangerColor">Danger</label>
+                                        <input type="color" id="themeDangerColor" data-theme-var="danger-color">
+                                    </div>
+                                     <div class="color-input-group">
+                                        <label for="themeWarningColor">Warning</label>
+                                        <input type="color" id="themeWarningColor" data-theme-var="warning-color">
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="theme-actions">
+                                <button type="button" class="btn btn-primary btn-lg" id="saveThemeBtn"><i class="bi bi-save"></i> Save Theme for All Users</button>
+                                <button type="button" class="btn btn-outline-danger" id="resetThemeBtn"><i class="bi bi-arrow-counterclockwise"></i> Reset to Default</button>
+                            </div>
+
+                        </form>
+                    </div>
+                </div>
+            </section>
+            <!-- ======================================= -->
+            
+            <!-- Settings Section -->
+            <section id="settings-section" class="section card">
+                <div class="card-body">
+                    <h2 class="card-title">App Settings</h2>
+                    <form id="appSettingsForm">
+                        <div class="row">
+                            <div class="col-md-6 mb-3"> <label for="settingAppName" class="form-label">App Name</label> <input type="text" class="form-control" id="settingAppName"> </div>
+                            <div class="col-md-6 mb-3"> <label for="settingLogoUrl" class="form-label">Logo URL</label> <input type="url" class="form-control" id="settingLogoUrl"> </div>
+                            <div class="col-md-4 mb-3"> <label for="settingSignupBonus" class="form-label">Sign Up Bonus (रु)</label> <input type="number" class="form-control" id="settingSignupBonus" min="0" step="any"> </div>
+                            <div class="col-md-4 mb-3"> <label for="settingReferralBonus" class="form-label">Referral Bonus (रु)</label> <input type="number" class="form-control" id="settingReferralBonus" min="0" step="any"> </div>
+                            <div class="col-md-4 mb-3"> <label for="settingMinWithdraw" class="form-label">Min Withdraw (रु)</label> <input type="number" class="form-control" id="settingMinWithdraw" min="0" step="any"> </div>
+                            <div class="col-md-6 mb-3"> <label for="settingSupportContact" class="form-label">Contact Us Number (for WhatsApp)</label> <input type="text" class="form-control" id="settingSupportContact" placeholder="e.g., 919876543210 (without +)"> </div>
+                            <div class="col-12 mb-3"> <label for="settingPolicyPrivacy" class="form-label">Privacy Policy</label> <textarea class="form-control" id="settingPolicyPrivacy" rows="5"></textarea> </div>
+                            <div class="col-12 mb-3"> <label for="settingPolicyTerms" class="form-label">Terms & Conditions</label> <textarea class="form-control" id="settingPolicyTerms" rows="5"></textarea> </div>
+                            <div class="col-12 mb-3"> <label for="settingPolicyRefund" class="form-label">Refund Policy</label> <textarea class="form-control" id="settingPolicyRefund" rows="5"></textarea> </div>
+                            <div class="col-12 mb-3"> <label for="settingPolicyFairPlay" class="form-label">Fair Play Policy</label> <textarea class="form-control" id="settingPolicyFairPlay" rows="5"></textarea> </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary"><i class="bi bi-save"></i> Save Settings</button>
+                        <div id="settingsStatus" class="mt-3"></div>
+                    </form>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Modals -->
+    <div class="modal fade" id="gameModal" tabindex="-1"> <div class="modal-dialog"> <div class="modal-content"> <div class="modal-header"> <h5 class="modal-title" id="gameModalTitle">Add New Game</h5> <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button> </div> <div class="modal-body"> <form id="gameForm"> <input type="hidden" id="gameEditId"> <div class="mb-3"> <label for="gameName" class="form-label">Game Name</label> <input type="text" class="form-control" id="gameName" required> </div> <div class="mb-3"> <label for="gameImageUrl" class="form-label">Image URL</label> <input type="url" class="form-control" id="gameImageUrl" required> <small class="text-muted">Direct image URL for an image you are authorized to use.</small> </div> <div class="mb-3"> <label for="gameImageFile" class="form-label">Upload New Image (Optional - Overwrites URL)</label> <input class="form-control" type="file" id="gameImageFile" accept="image/jpeg,image/png,image/webp,image/gif"> <div class="image-upload-status mt-2"></div> </div> <div id="gameStatus" class="mt-2"></div></form> </div> <div class="modal-footer"> <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button> <button type="button" class="btn btn-primary" id="saveGameBtn">Save Game</button> </div> </div> </div> </div>
+    <div class="modal fade" id="promotionModal" tabindex="-1"> <div class="modal-dialog"> <div class="modal-content"> <div class="modal-header"> <h5 class="modal-title" id="promotionModalTitle">Add New Promotion</h5> <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button> </div> <div class="modal-body"> <form id="promotionForm"> <input type="hidden" id="promotionEditId"> <div class="mb-3"> <label for="promoImageUrl" class="form-label">Image URL</label> <input type="url" class="form-control" id="promoImageUrl" required> <small class="text-muted">Direct image URL for an image you are authorized to use.</small> </div> <div class="mb-3"> <label for="promoImageFile" class="form-label">Upload New Image (Optional - Overwrites URL)</label> <input class="form-control" type="file" id="promoImageFile" accept="image/jpeg,image/png,image/webp,image/gif"> <div class="image-upload-status mt-2"></div> </div> <div class="mb-3"> <label for="promoLink" class="form-label">Link (Optional)</label> <input type="url" class="form-control" id="promoLink"> </div> <div id="promotionStatus" class="mt-2"></div></form> </div> <div class="modal-footer"> <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button> <button type="button" class="btn btn-primary" id="savePromotionBtn">Save Promotion</button> </div> </div> </div> </div>
+    <div class="modal fade" id="addTournamentModal" tabindex="-1"> <div class="modal-dialog modal-lg"> <div class="modal-content"> <div class="modal-header"> <h5 class="modal-title" id="tournamentModalTitle">Add New Tournament</h5> <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button> </div> <div class="modal-body"> <form id="tournamentForm"> <input type="hidden" id="tournamentEditId"> <div class="row"> <div class="col-md-6 mb-3"> <label for="tournamentGame" class="form-label">Game</label> <select class="form-select" id="tournamentGame" required></select> </div> <div class="col-md-6 mb-3"> <label for="tournamentName" class="form-label">Tournament Name</label> <input type="text" class="form-control" id="tournamentName" required> </div> <div class="col-md-6 mb-3"> <label for="tournamentStartTime" class="form-label">Start Date & Time</label> <input type="datetime-local" class="form-control" id="tournamentStartTime" required> </div> <div class="col-md-6 mb-3"> <label for="tournamentStatus" class="form-label">Status</label> <select class="form-select" id="tournamentStatus" required> <option value="upcoming">Upcoming</option> <option value="ongoing">Ongoing</option> <option value="completed">Completed</option> <option value="result">Result</option> <option value="cancelled">Cancelled</option> </select> </div> <div class="col-md-4 mb-3"> <label for="tournamentEntryFee" class="form-label">Entry Fee (रु)</label> <input type="number" class="form-control" id="tournamentEntryFee" min="0" value="0" required step="any"> </div> <div class="col-md-4 mb-3"> <label for="tournamentPrizePool" class="form-label">Total Prize Pool (रु)</label> <input type="number" class="form-control" id="tournamentPrizePool" min="0" value="0" step="any"> </div> <div class="col-md-4 mb-3"> <label for="tournamentPerKill" class="form-label">Per Kill Prize (रु)</label> <input type="number" class="form-control" id="tournamentPerKill" min="0" value="0" step="any"> </div> <div class="col-md-4 mb-3"> <label for="tournamentMaxPlayers" class="form-label">Max Players (0 for Unlimited)</label> <input type="number" class="form-control" id="tournamentMaxPlayers" min="0" value="0" required> </div><div class="col-md-4 mb-3"> <label for="tournamentMode" class="form-label">Mode</label> <select class="form-select" id="tournamentMode"><option value="Solo">Solo</option><option value="Duo">Duo</option><option value="Squad">Squad</option></select> </div> <div class="col-md-4 mb-3"> <label for="tournamentTags" class="form-label">Tags (comma-separated)</label> <input type="text" class="form-control" id="tournamentTags" placeholder="e.g., Erangel, TPP"> </div>
+                            <div class="col-12 mb-3"> <label for="tournamentBannerUrl" class="form-label">Banner URL (16:9)</label> <input type="url" class="form-control" id="tournamentBannerUrl" placeholder="https://example.com/banner.jpg"> </div>
+                            <div class="col-12 mb-3"> <label for="tournamentDescription" class="form-label">Description / Rules</label> <textarea class="form-control" id="tournamentDescription" rows="4"></textarea> </div> <div class="col-md-6 mb-3"> <label for="tournamentRoomId" class="form-label">Room ID</label> <input type="text" class="form-control" id="tournamentRoomId"> </div> <div class="col-md-6 mb-3"> <label for="tournamentRoomPassword" class="form-label">Room Password</label> <input type="text" class="form-control" id="tournamentRoomPassword"> </div> <div class="form-check mb-3 ms-2"> <input class="form-check-input" type="checkbox" id="tournamentShowIdPass"> <label class="form-check-label" for="tournamentShowIdPass"> Show ID/Pass?</label> </div> </div> <div id="addTournamentStatus" class="mt-2"></div></form> </div> <div class="modal-footer"> <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button> <button type="button" class="btn btn-primary" id="saveTournamentBtn">Save Tournament</button> </div> </div> </div> </div>
+    <div class="modal fade" id="userModal" tabindex="-1"> <div class="modal-dialog modal-lg modal-dialog-scrollable"> <div class="modal-content"> <div class="modal-header"> <h5 class="modal-title" id="userModalTitle">User Details</h5> <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button> </div> <div class="modal-body"> <div class="row"> <div class="col-md-6"> <h5>User Info</h5> <p><strong>UID:</strong> <small id="userDetailUid" class="text-muted user-uid-copy"></small> <i class="bi bi-clipboard copy-btn ms-1" data-target="#userDetailUid" title="Copy UID"></i></p> <p><strong>Email:</strong> <span id="userDetailEmail"></span></p> <p><strong>Name:</strong> <span id="userDetailName"></span></p> <p><strong>Created At:</strong> <span id="userDetailCreatedAt">N/A</span></p> <hr> <h5>Wallet</h5> <p>Total Balance: रु<span id="userDetailBalance">0.00</span></p> <p>Winning Cash: रु<span id="userDetailWinning">0.00</span></p> <p>Bonus Cash: रु<span id="userDetailBonus">0.00</span></p> <hr> <h5>Referral Info</h5> <p><strong>Referral Code:</strong> <span id="userDetailReferralCode" class="text-info">N/A</span> <i class="bi bi-clipboard copy-btn ms-1" data-target="#userDetailReferralCode" title="Copy Code"></i></p> <p><strong>Referred By:</strong> <span id="userDetailReferredBy">N/A</span></p> <p><strong>Users Referred:</strong> <span id="userDetailReferredCount">N/A</span></p> </div> <div class="col-md-6"> <h5>Update Balance (Caution!)</h5> <form id="updateBalanceForm"> <input type="hidden" id="editUserUid"> <div class="row"> <div class="col-md-6 mb-3"> <label for="balanceUpdateAmount" class="form-label">Amount (+/-)</label> <input type="number" step="any" class="form-control" id="balanceUpdateAmount" placeholder="e.g., 50 or -20" required> </div> <div class="col-md-6 mb-3"> <label for="balanceUpdateType" class="form-label">Balance Type</label> <select id="balanceUpdateType" class="form-select" required> <option value="">--Select--</option> <option value="balance">Total Balance</option> <option value="winningCash">Winning Cash</option> <option value="bonusCash">Bonus Cash</option> </select> </div> </div> <div class="mb-3"> <label for="balanceUpdateReason" class="form-label">Reason</label> <input type="text" class="form-control" id="balanceUpdateReason" placeholder="Manual Deposit, Correction etc." required> </div> <button type="submit" class="btn btn-warning">Update Balance</button> <div id="balanceUpdateStatus" class="mt-2"></div> </form> <hr> <h5>Status & Actions</h5> <p>Current Status: <span id="userDetailStatus" class="fw-bold"></span></p> <button class="btn btn-sm mb-2" id="userBlockBtn"></button> <button class="btn btn-sm btn-danger mb-2" id="userDeleteBtn"><i class="bi bi-trash"></i> Delete User (DB Only)</button> <hr> 
+                         <!-- =========== NEW USER NOTIFICATION FORM ========== -->
+                         <h5>Send Notification (Individual)</h5>
+                         <form id="individualNotificationForm">
+                             <div class="mb-2">
+                                 <label for="individualNotifTitle" class="form-label">Title</label>
+                                 <input type="text" class="form-control form-control-sm" id="individualNotifTitle" required>
+                             </div>
+                             <div class="mb-2">
+                                 <label for="individualNotifMessage" class="form-label">Message</label>
+                                 <textarea class="form-control form-control-sm" id="individualNotifMessage" rows="2" required></textarea>
+                             </div>
+                             <div class="mb-2">
+                                 <label for="individualNotifImageUrl" class="form-label">Image URL (Optional)</label>
+                                 <input type="url" class="form-control form-control-sm" id="individualNotifImageUrl">
+                             </div>
+                             <button type="submit" class="btn btn-info btn-sm">Send to this User</button>
+                             <div id="individualNotificationStatus" class="mt-2"></div>
+                         </form>
+                         <!-- ============================================= -->
+                      </div> </div> </div> <div class="modal-footer"> <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button> </div> </div> </div> </div>
+    <div class="modal fade" id="withdrawalActionModal" tabindex="-1"> <div class="modal-dialog"> <div class="modal-content"> <div class="modal-header"> <h5 class="modal-title">Withdrawal Action</h5> <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button> </div> <div class="modal-body"> <p><strong>Request ID:</strong> <small id="withdrawalDetailId" class="text-muted withdrawal-id-copy"></small> <i class="bi bi-clipboard copy-btn ms-1" data-target="#withdrawalDetailId" title="Copy Request ID"></i></p> <p><strong>User:</strong> <span id="withdrawalDetailUser"></span> (<small id="withdrawalDetailUserUid" class="text-muted withdrawal-user-uid-copy"></small> <i class="bi bi-clipboard copy-btn ms-1" data-target="#withdrawalDetailUserUid" title="Copy User UID"></i>)</p> <p><strong>Amount:</strong> रु<span id="withdrawalDetailAmount"></span></p> <p><strong>Method:</strong> <span id="withdrawalDetailMethod"></span></p> <hr> <div id="withdrawalRejectReasonDiv" style="display: none;" class="mb-3"> <label for="withdrawalRejectReason" class="form-label">Reason for Rejection</label> <textarea class="form-control" id="withdrawalRejectReason" rows="3" required></textarea> </div> <div id="withdrawalApproveNoteDiv" style="display: none;" class="mb-3"> <label for="withdrawalApproveNote" class="form-label">Admin Note / Txn ID (Optional)</label> <input type="text" class="form-control" id="withdrawalApproveNote" placeholder="e.g., Transaction ID"> </div> <div id="withdrawalActionStatus" class="mt-2"></div> </div> <div class="modal-footer"> <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button> <button type="button" class="btn btn-danger" id="rejectWithdrawalBtn">Reject</button> <button type="button" class="btn btn-success" id="approveWithdrawalBtn">Approve</button> </div> </div> </div> </div>
+    <div class="modal fade" id="addUserModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Add New User</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="addUserForm">
+                        <div class="mb-3">
+                            <label for="newUserName" class="form-label">Display Name</label>
+                            <input type="text" class="form-control" id="newUserName" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="newUserEmail" class="form-label">Email Address</label>
+                            <input type="email" class="form-control" id="newUserEmail" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="newUserPassword" class="form-label">Password (min 6 chars)</label>
+                            <input type="password" class="form-control" id="newUserPassword" required minlength="6">
+                        </div>
+                        <div class="mb-3">
+                            <label for="newUserInitialBalance" class="form-label">Initial Balance (रु)</label>
+                            <input type="number" step="any" class="form-control" id="newUserInitialBalance" value="0" min="0">
+                            <small class="text-muted">This will be added to Total Balance.</small>
+                        </div>
+                        <div id="addUserStatus" class="mt-2"></div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" id="saveNewUserBtn">Create User</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Add Staff Modal -->
+    <div class="modal fade" id="addStaffModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Add New Staff</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="addStaffForm">
+                        <div class="mb-3">
+                            <label for="newStaffName" class="form-label">Staff Name</label>
+                            <input type="text" class="form-control" id="newStaffName" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="newStaffEmail" class="form-label">Gmail / Email Address</label>
+                            <input type="email" class="form-control" id="newStaffEmail" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="newStaffPassword" class="form-label">Password (min 6 chars)</label>
+                            <input type="password" class="form-control" id="newStaffPassword" required minlength="6">
+                        </div>
+                        <div id="addStaffStatus" class="mt-2"></div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" id="saveNewStaffBtn">Create Staff</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Staff Detail / Edit Modal -->
+    <div class="modal fade" id="staffModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="staffModalTitle">Staff Details</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" id="editStaffUid">
+                    <p><strong>Email:</strong> <span id="staffDetailEmail"></span></p>
+                    <p><strong>Added On:</strong> <span id="staffDetailCreatedAt"></span></p>
+                    <p><strong>Status:</strong> <span id="staffDetailStatus" class="fw-bold"></span></p>
+                    <hr>
+                    <form id="editStaffNameForm">
+                        <div class="mb-3">
+                            <label for="editStaffName" class="form-label">Staff Name</label>
+                            <input type="text" class="form-control" id="editStaffName" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-sm" id="saveStaffNameBtn"><i class="bi bi-save"></i> Save Name</button>
+                    </form>
+                    <hr>
+                    <button type="button" class="btn btn-outline-warning btn-sm" id="staffResetPasswordBtn"><i class="bi bi-key-fill"></i> Send Password Reset Email</button>
+                    <div id="staffModalStatus" class="mt-2"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-sm btn-danger" id="staffBlockBtn">Block Staff</button>
+                    <button type="button" class="btn btn-sm btn-danger" id="staffDeleteBtn" data-id="">Delete Staff</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Registered Players Modal -->
+    <div class="modal fade" id="registeredPlayersModal" tabindex="-1">
+        <div class="modal-dialog modal-xl modal-dialog-scrollable"> <!-- Increased modal size -->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="registeredPlayersModalTitle">Registered Players</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Tournament: <strong id="registeredPlayersTournamentName"></strong></p>
+                    <div id="registeredPlayersStatus" class="mb-2"></div>
+                    <div class="table-responsive">
+                        <table class="table table-dark table-sm table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Registered By</th>
+                                    <th>Player 1 (Self) Details</th>
+                                    <th>Player 2 (Teammate) Details</th>
+                                    <th>Joined At</th>
+                                </tr>
+                            </thead>
+                            <tbody id="registeredPlayersTableBody">
+                                <!-- Populated by JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" id="downloadPlayersPdfBtn"><i class="bi bi-file-earmark-pdf-fill"></i> Download PDF</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- =========== PDF LIBRARIES ========== -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
+    <!-- ==================================== -->
+    <script type="module" src="assets/js/admin.js"></script>
+
+</body>
+</html>

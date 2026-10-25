@@ -1,0 +1,101 @@
+{
+  "rules": {
+    ".read": "auth != null && root.child('adminConfig/adminUid').val() === auth.uid",
+    ".write": "auth != null && root.child('adminConfig/adminUid').val() === auth.uid",
+    "games": {
+      ".read": true,
+      ".write": "auth != null && (root.child('adminConfig/adminUid').val() === auth.uid || root.child('staff').child(auth.uid).child('status').val() === 'active')"
+    },
+    "promotions": {
+      ".read": true,
+      ".write": "auth != null && (root.child('adminConfig/adminUid').val() === auth.uid || root.child('staff').child(auth.uid).child('status').val() === 'active')"
+    },
+    "settings": {
+      ".read": true,
+      "theme": {
+        ".write": "auth != null && (root.child('adminConfig/adminUid').val() === auth.uid || root.child('staff').child(auth.uid).child('status').val() === 'active')"
+      }
+    },
+    "notifications": {
+      ".read": "auth != null",
+      ".write": "auth != null && (root.child('adminConfig/adminUid').val() === auth.uid || root.child('staff').child(auth.uid).child('status').val() === 'active')"
+    },
+    "tournaments": {
+      ".indexOn": ["gameId", "status"],
+      ".read": "auth != null",
+      "$tournamentId": {
+        ".read": "auth != null",
+        ".write": "auth != null && (root.child('adminConfig/adminUid').val() === auth.uid || (root.child('staff').child(auth.uid).child('status').val() === 'active' && newData.child('registeredPlayers').val() === data.child('registeredPlayers').val()))"
+      }
+    },
+    "chats": {
+      "$tournamentId": {
+        ".indexOn": "timestamp",
+        ".read": "auth != null",
+        "$messageId": {
+          ".read": "auth != null",
+          ".write": "auth != null && (data.child('uid').val() === auth.uid || !data.exists())",
+          "uid": {
+            ".validate": "newData.val() === auth.uid && !data.exists()"
+          },
+          "message": {
+            ".validate": "newData.isString() && newData.val().length > 0"
+          }
+        }
+      }
+    },
+    "users": {
+      "$uid": {
+        ".read": "auth != null && auth.uid === $uid",
+        "$field": {
+          ".write": "auth != null && auth.uid === $uid && $field !== 'balance' && $field !== 'winningCash' && $field !== 'bonusCash' && $field !== 'walletCredits' && $field !== 'walletOperations' && $field !== 'joinedTournaments' && $field !== 'isAdmin' && $field !== 'uid' && $field !== 'email' && $field !== 'referralCode' && $field !== 'referredBy' && $field !== 'totalEarnings' && $field !== 'referralEarnings' && $field !== 'totalMatches' && $field !== 'wonMatches'"
+        },
+        "notifications": {
+          ".read": "auth != null && auth.uid === $uid"
+        }
+      },
+      ".indexOn": ["referralCode", "leaderboardRank"]
+    },
+    "transactions": {
+      "$uid": {
+        ".read": "auth != null && auth.uid === $uid"
+      }
+    },
+    "walletTopups": {
+      "$uid": {
+        ".read": "auth != null && auth.uid === $uid"
+      }
+    },
+    "supportReports": {
+      "$uid": {
+        ".read": "auth != null && auth.uid === $uid"
+      }
+    },
+    "gameTopupOrders": {
+      "$uid": {
+        ".read": "auth != null && auth.uid === $uid"
+      }
+    },
+    "withdrawals": {
+      ".indexOn": "status"
+    },
+    "deposits": {
+      ".indexOn": "status"
+    },
+    "pendingReferrals": {
+      ".indexOn": "status"
+    },
+    "adminConfig": {
+      ".read": true,
+      ".write": "auth != null && root.child('adminConfig/adminUid').val() === auth.uid"
+    },
+    "staff": {
+      ".indexOn": ["email", "status"],
+      ".read": "auth != null && root.child('adminConfig/adminUid').val() === auth.uid",
+      ".write": "auth != null && root.child('adminConfig/adminUid').val() === auth.uid",
+      "$uid": {
+        ".read": "auth != null && auth.uid === $uid"
+      }
+    }
+  }
+}

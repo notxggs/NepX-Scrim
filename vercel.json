@@ -1,0 +1,16 @@
+{
+  "rewrites": [
+    {
+      "source": "/admin",
+      "destination": "/admin.html"
+    },
+    {
+      "source": "/in",
+      "destination": "/in.html"
+    },
+    {
+      "source": "/staff-panel",
+      "destination": "/staff-panel.html"
+    }
+  ]
+}

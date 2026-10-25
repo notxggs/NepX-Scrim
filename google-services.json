@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "968399707106",
+    "firebase_url": "https://free-fire-tournment-app-a2de9-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "free-fire-tournment-app-a2de9",
+    "storage_bucket": "free-fire-tournment-app-a2de9.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:968399707106:android:c28fd0c82480a5328cf7bb",
+        "android_client_info": {
+          "package_name": "scrimzone.net"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "968399707106-f0g1mvcphfhjs6mp7re2eb2cjvjrud8d.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB5IFEmYBqzpDWPjg_kDQLikaHm4r-UdTA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "968399707106-f0g1mvcphfhjs6mp7re2eb2cjvjrud8d.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

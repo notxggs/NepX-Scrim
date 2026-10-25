@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ESPORTS ARENA | Next-Gen Gaming</title>
+    
+    <!-- Fonts & Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+    <link rel="stylesheet" href="assets/css/in.css">
+</head>
+<body>
+
+    <div class="overlay">
+        <!-- Logo -->
+        <header class="logo-wrap reveal active">
+            <img src="https://i.ibb.co/Qj8BBR2K/IMG-20251006-WA0001.jpg" alt="Logo" class="logo-main">
+        </header>
+
+        <main>
+            <section class="hero reveal active">
+                <h1>ESPORTS ARENA</h1>
+                <p style="color: #666; font-weight: 500;">Start Your Battle Today.</p>
+
+                <!-- Phone -->
+                <div class="phone-case reveal" id="phoneMockup">
+                    <div class="slider-wrap" id="slider">
+                        <img src="https://i.ibb.co/gMJk4QW5/IMG-20250830-033719.png">
+                        <img src="https://i.ibb.co/jP27yjpd/IMG-20250830-033709.png">
+                        <img src="https://i.ibb.co/0y0jYRgS/IMG-20250830-033700.png">
+                        <img src="https://i.ibb.co/sd8zfQtj/IMG-20250830-033647.png">
+                    </div>
+                </div>
+
+                <!-- Buttons with Shimmer -->
+                <div class="btn-box">
+                    <a href="https://github.com/seppexff-sudo/esports/raw/refs/heads/main/E-Sports_1.0.0.apk" class="btn-premium btn-dl shimmer-btn">
+                        <i class="bi bi-cloud-arrow-down-fill"></i> Download APK
+                    </a>
+                    <a href="https://drxbattele.gamer.gd/?i=1" class="btn-premium btn-site shimmer-btn">
+                        <i class="bi bi-globe2"></i> Official Website
+                    </a>
+                    <!-- Dynamic Developer Button -->
+                    <a href="https://t.me/ai_dev_studioo" class="btn-premium btn-dev shimmer-btn" id="dynamicDevBtn">
+                        <i class="bi bi-telegram"></i> <span>Contact Developer</span>
+                    </a>
+                </div>
+            </section>
+
+            <!-- Bento Stats -->
+            <div class="stats-bento">
+                <div class="stat-card stat-dl reveal" style="grid-column: span 2;">
+                    <i class="bi bi-download" style="color: var(--primary);"></i>
+                    <h2 class="counter" data-target="5858">0</h2>
+                    <p>Total Community Downloads</p>
+                </div>
+                <div class="stat-card stat-user reveal">
+                    <i class="bi bi-people" style="color: var(--secondary);"></i>
+                    <h2 class="counter" data-target="5213">0</h2>
+                    <p>Active Players</p>
+                </div>
+                <div class="stat-card stat-likes reveal">
+                    <i class="bi bi-heart" style="color: var(--success);"></i>
+                    <h2 class="counter" data-target="5565">0</h2>
+                    <p>Trust Likes</p>
+                </div>
+            </div>
+
+            <!-- Features -->
+            <section class="reveal">
+                <h3 style="margin: 0 25px 25px; color: var(--primary); letter-spacing: 1px; font-weight: 800;">CORE FEATURES</h3>
+                <div class="features-grid">
+                    <div class="feat-card" data-feature-title="Anti-Cheat" data-feature-description="Advanced military-grade shield to block all types of hacks and ensures 100% fair play.">
+                        <i class="bi bi-shield-check"></i>
+                        <h4>ANTI-CHEAT</h4>
+                    </div>
+                    <div class="feat-card" data-feature-title="Fast Payout" data-feature-description="Withdraw your tournament winnings to supported Nepali digital wallets and mobile banking accounts.">
+                        <i class="bi bi-lightning-charge"></i>
+                        <h4>FAST PAYOUT</h4>
+                    </div>
+                    <div class="feat-card" data-feature-title="24/7 Support" data-feature-description="Dedicated support team ready to help you on Telegram and App chat at any time.">
+                        <i class="bi bi-headset"></i>
+                        <h4>24/7 SUPPORT</h4>
+                    </div>
+                    <div class="feat-card" data-feature-title="Refer &amp; Earn" data-feature-description="Invite your squad and earn real cash rewards for every friend who joins the arena!">
+                        <i class="bi bi-gift"></i>
+                        <h4>REFER & EARN</h4>
+                    </div>
+                    <div class="feat-card" data-feature-title="Leaderboard" data-feature-description="Rise through the ranks and prove you are the king of the arena. Live tracking available.">
+                        <i class="bi bi-trophy"></i>
+                        <h4>LEADERBOARD</h4>
+                    </div>
+                    <div class="feat-card" data-feature-title="Free Entry" data-feature-description="Daily practice matches with zero entry fee. Show your skills for free!">
+                        <i class="bi bi-controller"></i>
+                        <h4>FREE ENTRY</h4>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- Feature Details Popup -->
+        <div id="featureModal">
+            <div class="modal-content">
+                <h3 id="modalTitle">Feature Name</h3>
+                <p id="modalDesc">Explanation goes here...</p>
+                <button class="close-btn" id="closeFeatureModalBtn" type="button">CLOSE</button>
+            </div>
+        </div>
+
+        <footer>
+            <span class="motivation-text">Download app and enjoy the adventure</span>
+            <span class="footer-copy">DESIGNED BY AI DEV STUDIO | &copy; 2025</span>
+        </footer>
+    </div>
+
+    <script src="assets/js/in.js"></script>
+</body>
+</html>
